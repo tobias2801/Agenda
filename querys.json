@@ -1,0 +1,36 @@
+{
+  "SELECT": [
+    {
+      "select_contactos": "SELECT * FROM contactos WHERE {0} like '{1}';",
+      "select_conctactos_all": "SELECT nombre, apellido, email, telefono, grupo FROM contactos"
+    },
+    {
+      "select_grupos": "SELECT * FROM grupos WHERE {0} like '{1}';",
+      "select_grupos_all": "SELECT nombre_grupo FROM grupos"
+    }
+  ],
+  "UPDATE": [
+    {
+      "update_contactos": "UPDATE contactos SET nombre='{0}', apellido='{1}', email='{2}', telefono='{3}', grupo='{4}' WHERE {5}='{6}';"
+    },
+    {
+      "update_grupos": "UPDATE grupos SET id_grupo={0}, nombre_grupo='{1}' WHERE {2}='{3}';"
+    }
+  ],
+  "DELETE": [
+    {
+      "delete_contactos": "DELETE FROM contactos WHERE {0}='{1}';"
+    },
+    {
+      "delete_grupos": "DELETE FROM grupos WHERE {0}='{1}';"
+    }
+  ],
+  "INSERT": [
+    {
+      "insert_contactos": "INSERT INTO contactos (nombre, apellido, email, telefono, grupo) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');"
+    },
+    {
+      "insert_grupos": "INSERT INTO grupos (id_grupo, nombre_grupo) VALUES ({0}, '{1}');"
+    }
+  ]
+}
