@@ -3,7 +3,7 @@
 from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget,
                         QGroupBox, QRadioButton, QHBoxLayout, QAction,
                         QTableWidget, QToolBar, QLineEdit, QLabel, QMessageBox,
-                        QTableWidgetItem)
+                        QTableWidgetItem, QAbstractItemView)
 from PyQt5.QtGui import (QIcon)
 from PyQt5.QtCore import (Qt)
 from agenda import Agenda
@@ -22,7 +22,12 @@ class AgendaMainWindow(QMainWindow):
         # Widget Central - Tabla de grupos y contactos
         self.tabla = QTableWidget(self)
         self.setCentralWidget(self.tabla)
+            # Hace que no se puedan editar los items en la tabla
         self.tabla.setEditTriggers(self.tabla.EditTriggers(0))
+            # Hace que solo se puedan seleccionar filas enteras
+        self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
+            # Contiene el modo actual de seleccion
+        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
 
         # Variable que contiene lo que se visualiza en la tabla, y lo pasa
         # a las acciones de la toolbar
@@ -57,43 +62,57 @@ class AgendaMainWindow(QMainWindow):
         # Conexiones
         self.ver_contactos.triggered.connect(self.mostrar_contactos)
         self.ver_grupos.triggered.connect(self.mostrar_grupos)
-        self.eliminar.triggered.connect(self.delete_contacto)
+        self.accion_seleccion_simple.triggered.connect(self.seleccion_simple)
+        self.accion_seleccion_multiple.triggered.connect(self.seleccion_multiple)
+        self.eliminar.triggered.connect(self.delete)
 
     def _crear_acciones(self):
         self.nuevo_contacto = QAction(self.tr("Contacto"), self)
         self.nuevo_grupo = QAction(self.tr("Grupo"), self)
+
         self.editar_contacto = QAction(self.tr("Contacto"), self)
         self.editar_grupo = QAction(self.tr("Grupo"), self)
+
         self.eliminar_contacto = QAction(self.tr("Contacto"), self)
         self.eliminar_grupo = QAction(self.tr("Grupo"), self)
+
         self.ver_contactos = QAction(self.tr("Contactos"), self)
         self.ver_grupos = QAction(self.tr("Grupos"), self)
 
         self.nuevo = QAction(self.tr("Nuevo"), self)
         self.nuevo.setShortcut("Ctrl+N")
         self.nuevo.setIcon(QIcon("recursos/iconos/nuevo.png"))
+
         self.editar = QAction(self.tr("Editar"), self)
         self.editar.setShortcut("Ctrl+E")
         self.editar.setIcon(QIcon("recursos/iconos/editar.png"))
+
         self.eliminar = QAction(self.tr("Eliminar"), self)
         self.eliminar.setShortcut("Ctrl+Del")
         self.eliminar.setIcon(QIcon("recursos/iconos/eliminar.png"))
+
         self.buscar = QAction(self.tr("Buscar"), self)
         self.buscar.setShortcut("Ctrl+F")
+
+        self.accion_seleccion_simple = QAction(self.tr("Simple"), self)
+        self.accion_seleccion_multiple = QAction(self.tr("Múltiple"), self)
 
     def _crear_menu(self, menu_bar):
         menu_archivo = menu_bar.addMenu(self.tr("&Nuevo"))
         menu_archivo.addAction(self.nuevo_contacto)
         menu_archivo.addAction(self.nuevo_grupo)
-        menu_archivo.addAction(self.buscar)
 
         menu_editar = menu_bar.addMenu(self.tr("&Editar"))
         menu_editar.addAction(self.editar_contacto)
         menu_editar.addAction(self.editar_grupo)
+        menu_archivo.addAction(self.buscar)
 
         menu_ver = menu_bar.addMenu(self.tr("&Ver"))
         menu_ver.addAction(self.ver_contactos)
         menu_ver.addAction(self.ver_grupos)
+        menu_ver_seleccion = menu_ver.addMenu(self.tr("Selección"))
+        menu_ver_seleccion.addAction(self.accion_seleccion_simple)
+        menu_ver_seleccion.addAction(self.accion_seleccion_multiple)
 
         menu_eliminar = menu_bar.addMenu(self.tr("&Eliminar"))
         menu_eliminar.addAction(self.eliminar_contacto)
@@ -169,8 +188,28 @@ class AgendaMainWindow(QMainWindow):
         self.visualizar = 'grupos'
         self.__mostrar('grupos')
 
-    def delete_contacto(self):
-        print(str(self.tabla.currentItem()))
+    def delete(self):
+        data = self.tabla.selectionModel().selectedRows()
+        rows = []
+        for i in data:
+            rows.append(i.row())
+
+        rows.sort(reverse=True)
+
+        for j in rows:
+            criterio = self.tabla.item(j, 0).text()
+            if self.visualizar == 'contactos':
+                self.delete_row('nombre', criterio)
+            elif self.visualizar == 'grupos':
+                self.delete_row('nombre_grupo', criterio)
+
+            self.tabla.removeRow(j)
 
     def buscar(self):
         pass
+
+    def seleccion_simple(self):
+        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+
+    def seleccion_multiple(self):
+        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.MultiSelection)

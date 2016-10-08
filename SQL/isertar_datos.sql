@@ -1,4 +1,3 @@
-﻿insert into contactos (nombre, apellido, email, telefono, grupo) values ('Tobías', 'Schwarz', 'tobias2801@hotmail.com', '3445-440270', 'grupo1');
 insert into contactos (nombre, apellido, email, telefono, grupo) values ('joel', 'Schwarz', 'joelsch@gmail.com', '3445-181684', 'grupo1');
 insert into contactos (nombre, apellido, email, telefono, grupo) values ('hugo', 'Schwarz', 'hugo@hotmail.com', '3446-685444', 'grupo2');
 insert into contactos (nombre, apellido, email, telefono, grupo) values ('lorena', 'herman', 'lorenah@gmail.com', '3445-165245', 'grupo3');

@@ -20,14 +20,14 @@ class ConnectDB():
         data = "dbname={0} user={1} password={2}".format(dbname, user,
                                                              password)
 
-        self.cursor = self.__create_connection(data)
+        self.conx, self.cursor = self.__create_connection(data)
         self.op_querys = query_s
 
     def __create_connection(self, data):
         try:
             conx = psycopg2.connect(data)
             cursor = conx.cursor()
-            return cursor
+            return conx, cursor
         except:
             print("Error al conectarse o crear el cursor")
 
@@ -43,7 +43,7 @@ class ConnectDB():
         self.cursor.close()
 
     def save(self):
-        self.cursor.commit()
+        self.conx.commit()
 
     def query(self, accion, tabla):
         if tabla == 'contactos':
