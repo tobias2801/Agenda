@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtWidgets import (QMainWindow, QPushButton, QVBoxLayout, QWidget,
-                        QGroupBox, QRadioButton, QHBoxLayout, QAction,
-                        QTableWidget, QToolBar, QLineEdit, QLabel, QMessageBox,
-                        QTableWidgetItem, QAbstractItemView)
+from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, QGroupBox,
+                        QRadioButton, QAction, QTableWidget, QToolBar,
+                        QLineEdit, QLabel, QMessageBox, QTableWidgetItem,
+                        QAbstractItemView)
 from PyQt5.QtGui import (QIcon)
 from PyQt5.QtCore import (Qt)
 from agenda import Agenda
-
+from dialogos.nuevo_contacto import NewContactDialog
 
 class AgendaMainWindow(QMainWindow):
 
@@ -27,7 +27,8 @@ class AgendaMainWindow(QMainWindow):
             # Hace que solo se puedan seleccionar filas enteras
         self.tabla.setSelectionBehavior(QAbstractItemView.SelectRows)
             # Contiene el modo actual de seleccion
-        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.selection_mode = self.tabla.setSelectionMode(
+                                            QAbstractItemView.SingleSelection)
 
         # Variable que contiene lo que se visualiza en la tabla, y lo pasa
         # a las acciones de la toolbar
@@ -65,16 +66,13 @@ class AgendaMainWindow(QMainWindow):
         self.accion_seleccion_simple.triggered.connect(self.seleccion_simple)
         self.accion_seleccion_multiple.triggered.connect(self.seleccion_multiple)
         self.eliminar.triggered.connect(self.delete)
+        self.nuevo.triggered.connect(self.new)
+        self.nuevo_contacto.triggered.connect(self.new_contact)
+        self.nuevo_grupo.triggered.connect(self.new_group)
 
     def _crear_acciones(self):
         self.nuevo_contacto = QAction(self.tr("Contacto"), self)
         self.nuevo_grupo = QAction(self.tr("Grupo"), self)
-
-        self.editar_contacto = QAction(self.tr("Contacto"), self)
-        self.editar_grupo = QAction(self.tr("Grupo"), self)
-
-        self.eliminar_contacto = QAction(self.tr("Contacto"), self)
-        self.eliminar_grupo = QAction(self.tr("Grupo"), self)
 
         self.ver_contactos = QAction(self.tr("Contactos"), self)
         self.ver_grupos = QAction(self.tr("Grupos"), self)
@@ -102,21 +100,12 @@ class AgendaMainWindow(QMainWindow):
         menu_archivo.addAction(self.nuevo_contacto)
         menu_archivo.addAction(self.nuevo_grupo)
 
-        menu_editar = menu_bar.addMenu(self.tr("&Editar"))
-        menu_editar.addAction(self.editar_contacto)
-        menu_editar.addAction(self.editar_grupo)
-        menu_archivo.addAction(self.buscar)
-
         menu_ver = menu_bar.addMenu(self.tr("&Ver"))
         menu_ver.addAction(self.ver_contactos)
         menu_ver.addAction(self.ver_grupos)
         menu_ver_seleccion = menu_ver.addMenu(self.tr("Selección"))
         menu_ver_seleccion.addAction(self.accion_seleccion_simple)
         menu_ver_seleccion.addAction(self.accion_seleccion_multiple)
-
-        menu_eliminar = menu_bar.addMenu(self.tr("&Eliminar"))
-        menu_eliminar.addAction(self.eliminar_contacto)
-        menu_eliminar.addAction(self.eliminar_grupo)
 
     def __confirmar(self, titulo, mensaje):
         titulo = titulo
@@ -209,7 +198,27 @@ class AgendaMainWindow(QMainWindow):
         pass
 
     def seleccion_simple(self):
-        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.selection_mode = self.tabla.setSelectionMode(
+                                            QAbstractItemView.SingleSelection)
 
     def seleccion_multiple(self):
-        self.selection_mode = self.tabla.setSelectionMode(QAbstractItemView.MultiSelection)
+        self.selection_mode = self.tabla.setSelectionMode(
+                                            QAbstractItemView.MultiSelection)
+
+    def new_contact(self):
+        dialogo = NewContactDialog()
+        dialogo.exec_()
+
+    def new_group(self):
+        dialogo = NewGroupDialog()
+        dialogo.exec_()
+
+    def new(self):
+
+        if self.visualizar == "contactos":
+            dialogo = NewContactDialog()
+
+        elif self.visualizar == "grupos":
+            dialogo = NewGroupDialog()
+
+        dialogo.exec_()
