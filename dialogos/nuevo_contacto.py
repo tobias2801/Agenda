@@ -2,15 +2,35 @@
 
 from PyQt5.QtWidgets import (QPushButton, QLabel, QDialog, QLineEdit, QComboBox,
                             QVBoxLayout, QHBoxLayout, QFormLayout)
-from PyQt5 import QtCore
 
 class NewContactDialog(QDialog):
-    """docstring for NewContactDialog."""
-    def __init__(self):
+    """Ventana que contiene el formulario para la creación de un
+        nuevo contacto."""
+
+    def __init__(self, agenda):
         super(NewContactDialog, self).__init__()
         self.setMinimumSize(300, 300)
         self.setMaximumSize(300, 300)
-        self.setWindowTitle(self.tr("Nuevo Contacto"))
+
+        self.agenda = agenda
+
+        self.dibujar()
+        self.layouts()
+
+            # Agregar los nombres de los grupos al combobox
+        sql = self.agenda.db.query('nombre_grupos', 'grupos')
+        rows = self.agenda.db.run_query(sql)
+        for i in range(len(rows)):
+            nombre_grupo = str(rows[i][0])
+            self.edit_grupo.addItem(nombre_grupo)
+
+            # Connections
+        self.btn_limpiar.clicked.connect(self.limpiar)
+        self.btn_salir.clicked.connect(self.cerrar)
+        self.btn_guardar.clicked.connect(self.guardar)
+        self.btn_guardar_y_continuar.clicked.connect(self.guardar_y_continuar)
+
+    def dibujar(self):
 
             # Line Edits
         self.edit_nombre = QLineEdit(self)
@@ -36,6 +56,8 @@ class NewContactDialog(QDialog):
         self.btn_guardar_y_continuar = QPushButton(self.tr("Guardar y continuar"), self)
         self.btn_limpiar = QPushButton(self.tr("Limpiar"), self)
         self.btn_salir = QPushButton(self.tr("Salir"), self)
+
+    def layouts(self):
 
             # Layouts
         layout_btns = QHBoxLayout()
@@ -79,12 +101,31 @@ class NewContactDialog(QDialog):
 
         self.setLayout(layoutg1)
 
-            # Connections
-        self.btn_limpiar.clicked.connect(self.limpiar)
-        # self.connect(self.btn_salir, QtCore.SIGNAL('clicked()'), QtCore.SLOT('quit()'))
+    def cerrar(self):
+        self.close()
 
     def limpiar(self):
         self.edit_nombre.setText("")
         self.edit_apellido.setText("")
         self.edit_email.setText("")
         self.edit_telefono.setText("")
+
+    def _guardar(self):
+        nombre = self.edit_nombre.text()
+        apellido = self.edit_apellido.text()
+        email = self.edit_email.text()
+        telefono = self.edit_telefono.text()
+        grupo = self.edit_grupo.currentText()
+
+        self.agenda.nuevo_contacto(nombre, apellido, email, telefono, grupo)
+        self.agenda.db.save()
+
+    def guardar(self):
+        self._guardar()
+        self.cerrar()
+
+        return True
+
+    def guardar_y_continuar(self):
+        self._guardar()
+        self.limpiar()

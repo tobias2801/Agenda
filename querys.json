@@ -6,6 +6,7 @@
     },
     {
       "select_grupos": "SELECT * FROM grupos WHERE {0} like '{1}';",
+      "select_nombre_grupos": "SELECT nombre_grupo FROM grupos;",
       "select_grupos_all": "SELECT nombre_grupo FROM grupos"
     }
   ],

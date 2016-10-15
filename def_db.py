@@ -71,6 +71,8 @@ class ConnectDB():
                 query_s = self.op_querys['INSERT'][1]['insert_grupos']
             elif accion == 'select_all':
                 query_s = self.op_querys['SELECT'][1]['select_grupos_all']
+            elif accion == 'nombre_grupos':
+                query_s = self.op_querys['SELECT'][1]['select_nombre_grupos']
             else:
                 query_s = False
 
