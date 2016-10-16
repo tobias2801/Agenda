@@ -9,7 +9,7 @@ CREATE TABLE contactos (
 );
 
 CREATE TABLE grupos (
-    id_grupo serial,
+    id_grupo int,
     nombre_grupo varchar(50)
 );
 

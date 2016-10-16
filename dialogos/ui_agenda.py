@@ -8,6 +8,7 @@ from PyQt5.QtGui import (QIcon)
 from PyQt5.QtCore import (Qt)
 from agenda import Agenda
 from nuevo_contacto import NewContactDialog
+from nuevo_grupo import NewGroupDialog
 
 class AgendaMainWindow(QMainWindow):
 
@@ -119,7 +120,7 @@ class AgendaMainWindow(QMainWindow):
 
         if r == QMessageBox.Yes:
             return True
-        else:
+        elif r == QMessageBox.No:
             return False
 
     def delete_row(self, campo, criterio, criterio2):
@@ -147,14 +148,14 @@ class AgendaMainWindow(QMainWindow):
 
         if rows:
             labels_contactos = ('Nombre', 'Apellido', 'Email', 'Teléfono', 'Grupo')
-            labels_grupos = ('Nombre',)
+            labels_grupos = ('ID', 'Nombre')
             column_count = len(rows[0])
             self.tabla.setColumnCount(column_count)
             self.tabla.setRowCount(len(rows))
 
             if column_count == 5:
                 self.tabla.setHorizontalHeaderLabels(labels_contactos)
-            elif column_count == 1:
+            elif column_count == 2:
                 self.tabla.setHorizontalHeaderLabels(labels_grupos)
 
             for i in range(0, len(rows)):
@@ -165,6 +166,8 @@ class AgendaMainWindow(QMainWindow):
 
                     nuevo_item = QTableWidgetItem(elemento)
                     self.tabla.setItem(i, l, nuevo_item)
+
+        self.tabla.resizeColumnsToContents()
 
     def __mostrar(self, tabla):
         tabla = tabla
@@ -190,11 +193,12 @@ class AgendaMainWindow(QMainWindow):
             criterio = self.tabla.item(j, 0).text()
             criterio2 = self.tabla.item(j, 1).text()
             if self.visualizar == 'contactos':
-                self.delete_row('nombre', criterio, criterio2)
+                i = self.delete_row('nombre', criterio, criterio2)
             elif self.visualizar == 'grupos':
-                self.delete_row('nombre_grupo', criterio, criterio2)
+                i = self.delete_row('nombre_grupo', criterio2, criterio)
 
-            self.tabla.removeRow(j)
+            if i:
+                self.tabla.removeRow(j)
 
     def buscar(self):
         pass
@@ -208,11 +212,13 @@ class AgendaMainWindow(QMainWindow):
                                             QAbstractItemView.MultiSelection)
 
     def new_contact(self):
+        self.mostrar_contactos()
         dialogo = NewContactDialog(self.agenda)
         dialogo.exec_()
         self.mostrar_contactos()
 
     def new_group(self):
+        self.mostrar_grupos()
         dialogo = NewGroupDialog(self.agenda)
         dialogo.exec_()
         self.mostrar_grupos()

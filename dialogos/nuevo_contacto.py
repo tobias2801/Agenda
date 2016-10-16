@@ -109,6 +109,8 @@ class NewContactDialog(QDialog):
         self.edit_apellido.setText("")
         self.edit_email.setText("")
         self.edit_telefono.setText("")
+        self.edit_grupo.setCurrentIndex(0)
+        self.edit_nombre.setFocus()
 
     def _guardar(self):
         nombre = self.edit_nombre.text()
