@@ -162,7 +162,7 @@ class AgendaMainWindow(QMainWindow):
                 fila = rows[i]
 
                 for l in range(0, len(fila)):
-                    elemento = fila[l]
+                    elemento = str(fila[l])
 
                     nuevo_item = QTableWidgetItem(elemento)
                     self.tabla.setItem(i, l, nuevo_item)
@@ -171,7 +171,9 @@ class AgendaMainWindow(QMainWindow):
 
     def __mostrar(self, tabla):
         tabla = tabla
-        self.render_tabla(self.agenda.select_all(tabla))
+        rows = self.agenda.select_all(tabla)
+        print(rows)
+        self.render_tabla(rows)
 
     def mostrar_contactos(self):
         self.visualizar = 'contactos'
