@@ -87,30 +87,27 @@ class Agenda():
         criterio = criterio_busqueda
         self._eliminar(campo_busqueda, criterio_busqueda, 'grupos')
 
-    def _buscar(self, campo_busqueda, criterio_busqueda, tabla):
-        campo = campo_busqueda
+    def _buscar(self, criterio_busqueda, tabla):
         criterio = criterio_busqueda
         tabla = tabla
 
         q = self.db.query('buscar', tabla)
-        sql = q.format(campo, criterio)
+        sql = q.format(criterio)
 
         rows = self.db.run_query(sql)
 
         return rows
 
-    def buscar_contacto(self, campo_busqueda, criterio_busqueda):
-        campo = campo_busqueda
+    def buscar_contacto(self, criterio_busqueda):
         criterio = criterio_busqueda
 
-        contactos = self._buscar(campo_busqueda, criterio_busqueda, 'contactos')
+        contactos = self._buscar(criterio_busqueda, 'contactos')
         return contactos
 
-    def buscar_grupo(self, campo_busqueda, criterio_busqueda):
-        campo = campo_busqueda
+    def buscar_grupo(self, criterio_busqueda):
         criterio = criterio_busqueda
 
-        grupos = self._buscar(campo_busqueda, criterio_busqueda, 'grupos')
+        grupos = self._buscar(criterio_busqueda, 'grupos')
         return grupos
 
     def select_all(self, tabla):

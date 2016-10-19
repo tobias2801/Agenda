@@ -73,6 +73,7 @@ class AgendaMainWindow(QMainWindow):
         self.nuevo_contacto.triggered.connect(self.new_contact)
         self.nuevo_grupo.triggered.connect(self.new_group)
         self.editar.triggered.connect(self.edit)
+        self.lineedit_buscar.textChanged.connect(self.search)
 
     def _crear_acciones(self):
         self.nuevo_contacto = QAction(self.tr("Contacto"), self)
@@ -282,5 +283,17 @@ class AgendaMainWindow(QMainWindow):
 
         self.mostrar_grupos()
 
-    def buscar(self):
-        pass
+    def search(self):
+        f = self.lineedit_buscar.text().lower()
+
+        rows = None
+
+        if f != '':
+            if self.visualizar == 'contactos':
+                rows = self.agenda.buscar_contacto(f)
+            elif self.visualizar == 'grupos':
+                rows = self.agenda.buscar_grupo(f)
+        else:
+            rows = self.agenda.select_all(self.visualizar)
+
+        self.render_tabla(rows)

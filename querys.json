@@ -1,13 +1,13 @@
 {
   "SELECT": [
     {
-      "select_contactos": "SELECT * FROM contactos WHERE {0} like '{1}';",
-      "select_conctactos_all": "SELECT nombre, apellido, email, telefono, grupo FROM contactos"
+      "select_contactos": "SELECT nombre, apellido, email, telefono, grupo FROM contactos WHERE LOWER(nombre) like '%{0}%' or LOWER(apellido) like '%{0}%' or LOWER(email) like '%{0}%' or LOWER(grupo) like '%{0}%' ORDER BY nombre;",
+      "select_conctactos_all": "SELECT nombre, apellido, email, telefono, grupo FROM contactos ORDER BY nombre;"
     },
     {
-      "select_grupos": "SELECT * FROM grupos WHERE {0} like '{1}';",
-      "select_nombre_grupos": "SELECT nombre_grupo FROM grupos;",
-      "select_grupos_all": "SELECT id_grupo, nombre_grupo FROM grupos;"
+      "select_grupos": "SELECT * FROM grupos WHERE LOWER(nombre_grupo) like '%{0}%' ORDER BY nombre_grupo;",
+      "select_nombre_grupos": "SELECT nombre_grupo FROM grupos ORDER BY nombre_grupo;",
+      "select_grupos_all": "SELECT id_grupo, nombre_grupo FROM grupos ORDER BY nombre_grupo;"
     }
   ],
   "UPDATE": [
