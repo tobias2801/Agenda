@@ -4,22 +4,24 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QLineEdit,
                                 QHBoxLayout, QVBoxLayout, QSpinBox)
 
 
-class NewGroupDialog(QDialog):
+class EditGroupDialog(QDialog):
 
-    def __init__(self, agenda):
-        super(NewGroupDialog, self).__init__()
+    def __init__(self, agenda, grupo_a_editar):
+        super(EditGroupDialog, self).__init__()
         self.setMinimumSize(300, 150)
         self.setMaximumSize(300, 150)
-        self.setWindowTitle(self.tr("Nuevo Grupo"))
+        self.setWindowTitle(self.tr("Editar Grupo"))
 
         self.agenda = agenda
+        self.grupo_a_editar = grupo_a_editar
 
         self.dibujar()
         self.layouts()
 
+        self.render()
+
         self.btn_salir.clicked.connect(self.cerrar)
         self.btn_guardar.clicked.connect(self.guardar)
-        self.btn_guardar_y_continuar.clicked.connect(self.guardar_y_continuar)
 
     def dibujar(self):
 
@@ -33,8 +35,6 @@ class NewGroupDialog(QDialog):
 
         self.btn_salir = QPushButton(self.tr("Salir"), self)
         self.btn_guardar = QPushButton(self.tr("Guardar"), self)
-        self.btn_guardar_y_continuar = QPushButton(self.tr("Guardar y continuar"),
-                                                    self)
 
     def layouts(self):
 
@@ -46,19 +46,13 @@ class NewGroupDialog(QDialog):
         layouts_label_edit1.addWidget(self.label_id_grupo)
         layouts_label_edit1.addWidget(self.edit_id_grupo)
 
-        layout_btns = QHBoxLayout()
-        layout_btns.addWidget(self.btn_guardar)
-        layout_btns.addWidget(self.btn_guardar_y_continuar)
-        layout_btns1 = QVBoxLayout()
-        layout_btns1.addLayout(layout_btns)
-        layout_btns1.addWidget(self.btn_salir)
-
         layout_grl = QVBoxLayout(self)
         layout_grl.addSpacing(10)
         layout_grl.addLayout(layouts_label_edit1)
         layout_grl.addLayout(layouts_label_edit)
         layout_grl.addSpacing(15)
-        layout_grl.addLayout(layout_btns1)
+        layout_grl.addWidget(self.btn_guardar)
+        layout_grl.addWidget(self.btn_salir)
 
         self.setLayout(layout_grl)
 
@@ -66,19 +60,18 @@ class NewGroupDialog(QDialog):
         self.close()
 
     def guardar(self):
-        self._guardar()
-        self.cerrar()
-
-    def guardar_y_continuar(self):
-        self._guardar()
-        self.edit_nombre_grupo.setText("")
-        self.edit_id_grupo.setValue(0)
-        self.edit_id_grupo.setFocus()
-
-    def _guardar(self):
 
         id_grupo = self.edit_id_grupo.value()
         nombre = self.edit_nombre_grupo.text()
 
-        self.agenda.nuevo_grupo(id_grupo, nombre)
+        campo = 'nombre_grupo'
+        criterio = self.grupo_a_editar[1]
+
+        self.agenda.editar_grupo(campo, criterio, id_grupo, nombre)
         self.agenda.db.save()
+
+        self.cerrar()
+
+    def render(self):
+        self.edit_nombre_grupo.setText(self.grupo_a_editar[1])
+        self.edit_id_grupo.setValue(int((self.grupo_a_editar[0])))

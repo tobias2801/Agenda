@@ -9,6 +9,8 @@ from PyQt5.QtCore import (Qt)
 from agenda import Agenda
 from nuevo_contacto import NewContactDialog
 from nuevo_grupo import NewGroupDialog
+from editar_contacto import EditContactDialog
+from editar_grupo import EditGroupDialog
 
 class AgendaMainWindow(QMainWindow):
 
@@ -70,6 +72,7 @@ class AgendaMainWindow(QMainWindow):
         self.nuevo.triggered.connect(self.new)
         self.nuevo_contacto.triggered.connect(self.new_contact)
         self.nuevo_grupo.triggered.connect(self.new_group)
+        self.editar.triggered.connect(self.edit)
 
     def _crear_acciones(self):
         self.nuevo_contacto = QAction(self.tr("Contacto"), self)
@@ -172,7 +175,6 @@ class AgendaMainWindow(QMainWindow):
     def __mostrar(self, tabla):
         tabla = tabla
         rows = self.agenda.select_all(tabla)
-        print(rows)
         self.render_tabla(rows)
 
     def mostrar_contactos(self):
@@ -202,9 +204,6 @@ class AgendaMainWindow(QMainWindow):
             if i:
                 self.tabla.removeRow(j)
 
-    def buscar(self):
-        pass
-
     def seleccion_simple(self):
         self.selection_mode = self.tabla.setSelectionMode(
                                             QAbstractItemView.SingleSelection)
@@ -232,3 +231,56 @@ class AgendaMainWindow(QMainWindow):
 
         elif self.visualizar == "grupos":
             self.new_group()
+
+    def edit(self):
+        self.seleccion_simple()
+        self._edit()
+
+    def _edit(self):
+
+        if self.visualizar == "contactos":
+            self.edit_contact()
+
+        elif self.visualizar == "grupos":
+            self.edit_group()
+
+    def edit_contact(self):
+        data = self.tabla.selectionModel().selectedRows()
+        rows = []
+        for i in data:
+            rows.append(i.row())
+
+        rows.sort(reverse=True)
+        fila = []
+
+        for j in rows:
+            for i in range(0, 5):
+                fila.append(self.tabla.item(j, i).text())
+
+        current_contact = fila[0:5]
+        dialogo = EditContactDialog(self.agenda, current_contact)
+        dialogo.exec_()
+
+        self.mostrar_contactos()
+
+    def edit_group(self):
+        data = self.tabla.selectionModel().selectedRows()
+        rows = []
+        for i in data:
+            rows.append(i.row())
+
+        rows.sort(reverse=True)
+        fila = []
+
+        for j in rows:
+            for i in range(0, 2):
+                fila.append(self.tabla.item(j, i).text())
+
+        current_contact = fila[0:2]
+        dialogo = EditGroupDialog(self.agenda, current_contact)
+        dialogo.exec_()
+
+        self.mostrar_grupos()
+
+    def buscar(self):
+        pass

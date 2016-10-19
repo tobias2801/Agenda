@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from def_db import ConnectDB, DB_NAME, DB_USER, DB_PASS, json_querys
 
 
@@ -33,10 +34,13 @@ class Agenda():
 
         self.db.run_query(sql)
 
-    def editar_contacto(self, campo_busqueda, criterio_busqueda,
-                            nombre, apellido, email, telefono, grupo):
-        campo = campo_busqueda
-        criterio = criterio_busqueda
+    def editar_contacto(self, nombre, apellido, email, telefono, grupo,
+                            campo_busqueda1, criterio_busqueda1, campo_busqueda2,
+                            criterio_busqueda2):
+        campo1 = campo_busqueda1
+        criterio1 = criterio_busqueda1
+        campo2 = campo_busqueda2
+        criterio2 = criterio_busqueda2
 
         nombre = nombre
         apellido = apellido
@@ -46,7 +50,7 @@ class Agenda():
 
         q = self.db.query('editar', 'contactos')
         sql = q.format(nombre, apellido, email, telefono,
-                        grupo, campo, criterio)
+                        grupo, campo1, criterio1, campo2, criterio2)
 
         self.db.run_query(sql)
 

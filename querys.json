@@ -12,7 +12,7 @@
   ],
   "UPDATE": [
     {
-      "update_contactos": "UPDATE contactos SET nombre='{0}', apellido='{1}', email='{2}', telefono='{3}', grupo='{4}' WHERE {5}='{6}';"
+      "update_contactos": "UPDATE contactos SET nombre='{0}', apellido='{1}', email='{2}', telefono='{3}', grupo='{4}' WHERE {5}='{6}' AND {7}='{8}';"
     },
     {
       "update_grupos": "UPDATE grupos SET id_grupo={0}, nombre_grupo='{1}' WHERE {2}='{3}';"
