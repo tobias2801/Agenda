@@ -1,5 +1,4 @@
-
-CREATE TABLE contactos (
+﻿CREATE TABLE contactos (
     id serial,
     nombre varchar(30),
     apellido varchar(30),
@@ -27,11 +26,11 @@ ADD CONSTRAINT ck_telefono CHECK (
     substring(telefono, 5, 1) in (' ', '-')
 );
 
-ALTER TABLE contactos
-ADD CONSTRAINT fk_grupo foreign key(grupo) references grupos(nombre_grupo);
-
 ALTER TABLE grupos
 ADD CONSTRAINT pk_idgrupo primary key (id_grupo);
 
 ALTER TABLE grupos
 ADD CONSTRAINT uq_nombre unique(nombre_grupo);
+
+ALTER TABLE contactos
+ADD CONSTRAINT fk_grupo foreign key(grupo) references grupos(nombre_grupo) on update cascade on delete set NULL;

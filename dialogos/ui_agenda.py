@@ -7,10 +7,10 @@ from PyQt5.QtWidgets import (QMainWindow, QPushButton, QWidget, QGroupBox,
 from PyQt5.QtGui import (QIcon)
 from PyQt5.QtCore import (Qt)
 from agenda import Agenda
-from nuevo_contacto import NewContactDialog
-from nuevo_grupo import NewGroupDialog
-from editar_contacto import EditContactDialog
-from editar_grupo import EditGroupDialog
+from .nuevo_contacto import NewContactDialog
+from .nuevo_grupo import NewGroupDialog
+from .editar_contacto import EditContactDialog
+from .editar_grupo import EditGroupDialog
 
 class AgendaMainWindow(QMainWindow):
 
