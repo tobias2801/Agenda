@@ -4,8 +4,8 @@ import psycopg2
 import json
 
 DB_NAME = 'Agenda'
-DB_USER = 'tobias2801'
-DB_PASS = 'yymcsaSJ2415'
+DB_USER = 'user'
+DB_PASS = 'pass'
 
 
 with open("querys.json") as f:
